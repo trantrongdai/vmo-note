@@ -8,7 +8,7 @@ public class CheckBoxNote extends BaseEntity {
 
     private String checkBoxStatus;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "note_id", referencedColumnName = "id")
     private BasicNote basicNote;
 

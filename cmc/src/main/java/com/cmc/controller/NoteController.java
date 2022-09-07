@@ -1,23 +1,18 @@
 package com.cmc.controller;
 
 import com.cmc.dto.RestResponse;
-import com.cmc.dto.request.BatchDeleteRequestDto;
 import com.cmc.dto.request.NoteRequestDto;
-import com.cmc.dto.request.StudentRequestDto;
-import com.cmc.dto.request.filter.StudentFilterRequest;
+import com.cmc.dto.request.filter.NoteFilterRequest;
 import com.cmc.dto.response.FilterResponseDto;
 import com.cmc.dto.response.NoteResponseDto;
-import com.cmc.dto.response.StudentResponseDto;
 import com.cmc.enums.NoteType;
 import com.cmc.enums.StatusCode;
-import com.cmc.mapper.StudentMapper;
-import com.cmc.model.Student;
+import com.cmc.mapper.BasicNoteMapper;
+import com.cmc.model.BasicNote;
 import com.cmc.model.dto.NoteDto;
-import com.cmc.model.dto.StudentDto;
+import com.cmc.service.BasicNoteService;
 import com.cmc.service.CheckBoxNoteService;
 import com.cmc.service.ImageNoteService;
-import com.cmc.service.BasicNoteService;
-import com.cmc.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +32,6 @@ public class NoteController extends RestBaseController {
     private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
 
     @Autowired
-    StudentService studentService;
-
-    @Autowired
     BasicNoteService basicNoteService;
 
     @Autowired
@@ -51,13 +43,13 @@ public class NoteController extends RestBaseController {
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public RestResponse<NoteResponseDto> createNote(@Valid @RequestBody NoteRequestDto requestDto) {
         NoteDto createdNote = null;
-        if (requestDto.getNoteType().equals(NoteType.BASIC_NOTE.name())) {
+        if (NoteType.BASIC_NOTE.name().equals(requestDto.getNoteType())) {
             createdNote = basicNoteService.createNote(requestDto);
         }
-        if (requestDto.getNoteType().equals(NoteType.IMAGE_NOTE.name())) {
+        if (NoteType.IMAGE_NOTE.name().equals(requestDto.getNoteType())) {
             createdNote = imageNoteService.createNote(requestDto);
         }
-        if (requestDto.getNoteType().equals(NoteType.CHECKBOX_NOTE.name())) {
+        if (NoteType.CHECKBOX_NOTE.name().equals(requestDto.getNoteType())) {
             createdNote = checkBoxNoteService.createNote(requestDto);
         }
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
@@ -66,56 +58,65 @@ public class NoteController extends RestBaseController {
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<StudentResponseDto> updateStudent(@PathVariable(value = "id") Long id,
-                                                          @Valid @RequestBody StudentRequestDto requestDto) {
-        StudentDto updatedStudent = studentService.updateStudent(id, requestDto);
+    public RestResponse<NoteResponseDto> updateNote(@PathVariable(value = "id") Long id,
+                                                       @Valid @RequestBody NoteRequestDto requestDto) {
+        NoteDto updatedNote = null;
+        if (NoteType.BASIC_NOTE.name().equals(requestDto.getNoteType())) {
+            updatedNote = basicNoteService.updateNote(id, requestDto);
+        }
+        if (NoteType.IMAGE_NOTE.name().equals(requestDto.getNoteType())) {
+            updatedNote = imageNoteService.updateNote(id, requestDto);
+        }
+        if (NoteType.CHECKBOX_NOTE.name().equals(requestDto.getNoteType())) {
+            updatedNote = checkBoxNoteService.updateNote(id, requestDto);
+        }
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
-                new StudentResponseDto(updatedStudent))
+                new NoteResponseDto(updatedNote))
                 .build();
     }
 
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<Long> deleteStudent(@PathVariable(value = "id") Long id) {
-        studentService.deleteStudent(id);
+    public RestResponse<Long> deleteNote(@PathVariable(value = "id") Long id) {
+        basicNoteService.deleteNote(id);
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(), id).build();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<StudentResponseDto> getStudentDetails(@PathVariable(value = "id") Long id) {
-        StudentDto studentDto = studentService.getStudentDetails(id);
-        StudentResponseDto studentResponseDto = new StudentResponseDto(studentDto);
+    public RestResponse<NoteResponseDto> getStudentDetails(@PathVariable(value = "id") Long id) {
+        NoteDto noteDto = basicNoteService.getNoteDetails(id);
+        if (NoteType.IMAGE_NOTE.name().equals(noteDto.getNoteType())) {
+            noteDto = imageNoteService.getNoteDetails(id);
+        }
+        if (NoteType.CHECKBOX_NOTE.name().equals(noteDto.getNoteType())) {
+            noteDto = checkBoxNoteService.getNoteDetails(id);
+        }
+        NoteResponseDto noteResponseDto = new NoteResponseDto(noteDto);
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
-                studentResponseDto)
+                noteResponseDto)
                 .build();
     }
 
     @PostMapping(value = "/list", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<FilterResponseDto> listAllStudent(@RequestParam Integer page,
-                                                          @RequestParam Integer pageSize,
-                                                          @RequestBody(required = false) StudentFilterRequest filterRequest) {
+    public RestResponse<FilterResponseDto> listAllNote(@RequestParam Integer page,
+                                                       @RequestParam Integer pageSize,
+                                                       @RequestBody(required = false) NoteFilterRequest filterRequest) {
 
-        Page<Student> students = studentService.findAll(page, pageSize, filterRequest);
+        Page<BasicNote> basicNotes = basicNoteService.findAll(page, pageSize, filterRequest);
 
-        FilterResponseDto<StudentDto> filterResults = new FilterResponseDto<>();
+        FilterResponseDto<NoteDto> filterResults = new FilterResponseDto<>();
 
         filterResults
-                .setData(students
+                .setData(basicNotes
                         .getContent()
                         .stream()
-                        .map(student -> StudentMapper.INSTANCE.fromEntity(student))
+                        .map(basicNote -> BasicNoteMapper.INSTANCE.fromEntity(basicNote))
                         .collect(Collectors.toList()));
 
-        filterResults.setPageSize(students.getNumberOfElements());
-        filterResults.setTotalElements(students.getTotalElements());
-        filterResults.setTotalPages(students.getTotalPages());
+        filterResults.setPageSize(basicNotes.getNumberOfElements());
+        filterResults.setTotalElements(basicNotes.getTotalElements());
+        filterResults.setTotalPages(basicNotes.getTotalPages());
 
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(), filterResults).build();
-    }
-
-    @PostMapping(value = "/batch-delete", produces = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<?> batchDeleteStudent(@Valid @RequestBody BatchDeleteRequestDto batchDeleteRequestDto) {
-        studentService.batchDelete(batchDeleteRequestDto);
-        return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(), batchDeleteRequestDto.getIds()).build();
     }
 
 }

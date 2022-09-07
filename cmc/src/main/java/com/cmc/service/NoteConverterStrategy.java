@@ -7,5 +7,7 @@ public interface NoteConverterStrategy<T> {
 
     public NoteDto fromEntity(T t);
 
-    public T fromRequestDto(NoteRequestDto requestDto);
+    public T getCreateEntity(NoteRequestDto requestDto);
+
+    public T getUpdateEntity(NoteRequestDto requestDto, Long id);
 }

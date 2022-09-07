@@ -8,7 +8,7 @@ public class ImageNote extends BaseEntity {
 
     private String imageUrl;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "note_id", referencedColumnName = "id")
     private BasicNote basicNote;
 

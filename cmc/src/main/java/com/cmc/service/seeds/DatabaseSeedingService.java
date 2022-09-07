@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DatabaseSeedingService {
-    @Autowired
-    StudentSeeder studentSeeder;
-
-    public void run() {
-        studentSeeder.run();
-    }
+//    @Autowired
+//    StudentSeeder studentSeeder;
+//
+//    public void run() {
+//        studentSeeder.run();
+//    }
 }

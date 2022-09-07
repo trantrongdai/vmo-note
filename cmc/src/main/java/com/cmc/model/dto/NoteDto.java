@@ -15,6 +15,8 @@ public class NoteDto {
 
     private String checkBoxStatus;
 
+    private String noteType;
+
     public NoteDto() {
     }
 
@@ -56,5 +58,13 @@ public class NoteDto {
 
     public void setCheckBoxStatus(String checkBoxStatus) {
         this.checkBoxStatus = checkBoxStatus;
+    }
+
+    public String getNoteType() {
+        return noteType;
+    }
+
+    public void setNoteType(String noteType) {
+        this.noteType = noteType;
     }
 }

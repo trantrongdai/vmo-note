@@ -1,9 +1,9 @@
 package com.cmc.repository;
 
-import com.cmc.model.Student;
+import com.cmc.model.BasicNote;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StudentRepository extends JpaRepository<Student, Long> {
+public interface BasicNoteRepository extends JpaRepository<BasicNote, Long> {
 }

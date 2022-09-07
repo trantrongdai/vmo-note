@@ -2,10 +2,7 @@ package com.cmc.model;
 
 import org.hibernate.annotations.Nationalized;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -25,6 +22,12 @@ public class BasicNote extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+
+    @OneToOne(mappedBy = "basicNote", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true)
+    private CheckBoxNote checkBoxNote;
+
+    @OneToOne(mappedBy = "basicNote", cascade = {CascadeType.PERSIST,CascadeType.REMOVE}, orphanRemoval = true)
+    private ImageNote image;
 
     public String getTitle() {
         return title;
