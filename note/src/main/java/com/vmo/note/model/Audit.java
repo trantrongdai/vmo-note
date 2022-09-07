@@ -38,6 +38,7 @@ public abstract class Audit {
     @PrePersist
     protected void preparingCreate() {
         createdAt = DateTimeUtils.getCurrentTimeUTC();
+        updatedAt = null;
     }
 
     @PreUpdate
