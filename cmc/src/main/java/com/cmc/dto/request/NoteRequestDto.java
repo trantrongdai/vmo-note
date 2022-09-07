@@ -20,6 +20,8 @@ public class NoteRequestDto {
 
     private String checkBoxStatus;
 
+    private String noteType;
+
     public String getTitle() {
         return title;
     }
@@ -50,5 +52,13 @@ public class NoteRequestDto {
 
     public void setCheckBoxStatus(String checkBoxStatus) {
         this.checkBoxStatus = checkBoxStatus;
+    }
+
+    public String getNoteType() {
+        return noteType;
+    }
+
+    public void setNoteType(String noteType) {
+        this.noteType = noteType;
     }
 }

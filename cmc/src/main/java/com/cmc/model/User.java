@@ -18,7 +18,7 @@ public class User extends BaseEntity {
 
     @OneToMany
     @JoinColumn(name = "user_id")
-    private Set<Note> notes;
+    private Set<BasicNote> basicNotes;
 
     public String getUsername() {
         return username;
@@ -36,11 +36,11 @@ public class User extends BaseEntity {
         this.password = password;
     }
 
-    public Set<Note> getNotes() {
-        return notes;
+    public Set<BasicNote> getBasicNotes() {
+        return basicNotes;
     }
 
-    public void setNotes(Set<Note> notes) {
-        this.notes = notes;
+    public void setBasicNotes(Set<BasicNote> basicNotes) {
+        this.basicNotes = basicNotes;
     }
 }

@@ -3,14 +3,14 @@ package com.cmc.service;
 import com.cmc.dto.request.BatchDeleteRequestDto;
 import com.cmc.dto.request.NoteRequestDto;
 import com.cmc.dto.request.filter.NoteFilterRequest;
-import com.cmc.model.Note;
+import com.cmc.model.BasicNote;
 import com.cmc.model.dto.NoteDto;
 import org.springframework.data.domain.Page;
 
 /**
  * Student serivce interface
  */
-public interface NoteService {
+public interface BasicNoteService {
     /**
      * Create note
      *
@@ -51,7 +51,7 @@ public interface NoteService {
      * @param filterRequest
      * @return Page<Note>
      */
-    Page<Note> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest filterRequest);
+    Page<BasicNote> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest filterRequest);
 
     /**
      * batch delete note

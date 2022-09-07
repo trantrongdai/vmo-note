@@ -8,12 +8,15 @@ import com.cmc.dto.request.filter.StudentFilterRequest;
 import com.cmc.dto.response.FilterResponseDto;
 import com.cmc.dto.response.NoteResponseDto;
 import com.cmc.dto.response.StudentResponseDto;
+import com.cmc.enums.NoteType;
 import com.cmc.enums.StatusCode;
 import com.cmc.mapper.StudentMapper;
 import com.cmc.model.Student;
 import com.cmc.model.dto.NoteDto;
 import com.cmc.model.dto.StudentDto;
-import com.cmc.service.NoteService;
+import com.cmc.service.CheckBoxNoteService;
+import com.cmc.service.ImageNoteService;
+import com.cmc.service.BasicNoteService;
 import com.cmc.service.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,11 +40,26 @@ public class NoteController extends RestBaseController {
     StudentService studentService;
 
     @Autowired
-    NoteService noteService;
+    BasicNoteService basicNoteService;
+
+    @Autowired
+    ImageNoteService imageNoteService;
+
+    @Autowired
+    CheckBoxNoteService checkBoxNoteService;
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public RestResponse<NoteResponseDto> createNote(@Valid @RequestBody NoteRequestDto requestDto) {
-        NoteDto createdNote = noteService.createNote(requestDto);
+        NoteDto createdNote = null;
+        if (requestDto.getNoteType().equals(NoteType.BASIC_NOTE.name())) {
+            createdNote = basicNoteService.createNote(requestDto);
+        }
+        if (requestDto.getNoteType().equals(NoteType.IMAGE_NOTE.name())) {
+            createdNote = imageNoteService.createNote(requestDto);
+        }
+        if (requestDto.getNoteType().equals(NoteType.CHECKBOX_NOTE.name())) {
+            createdNote = checkBoxNoteService.createNote(requestDto);
+        }
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
                 new NoteResponseDto(createdNote))
                 .build();

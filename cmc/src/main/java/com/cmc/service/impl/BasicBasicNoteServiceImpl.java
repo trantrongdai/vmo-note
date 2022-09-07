@@ -7,13 +7,15 @@ import com.cmc.dto.request.filter.NoteFilterRequest;
 import com.cmc.exceptions.AppException;
 import com.cmc.exceptions.BadRequestException;
 import com.cmc.exceptions.ResourceNotFoundException;
-import com.cmc.mapper.NoteMapper;
-import com.cmc.model.Note;
+import com.cmc.mapper.BasicNoteMapper;
+import com.cmc.model.BasicNote;
 import com.cmc.model.User;
 import com.cmc.model.dto.NoteDto;
+import com.cmc.repository.ImageNoteRepository;
 import com.cmc.repository.NoteRepository;
 import com.cmc.repository.UserRepository;
-import com.cmc.service.NoteService;
+import com.cmc.service.NoteConverterStrategy;
+import com.cmc.service.BasicNoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,9 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class NoteServiceImpl implements NoteService {
+public class BasicBasicNoteServiceImpl implements BasicNoteService, NoteConverterStrategy<BasicNote> {
 
-    private static final Logger logger = LoggerFactory.getLogger(NoteServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BasicBasicNoteServiceImpl.class);
 
     @Autowired
     MessageTranslator messageTranslator;
@@ -44,25 +46,19 @@ public class NoteServiceImpl implements NoteService {
     @Autowired
     private NoteRepository noteRepository;
 
+    @Autowired
+    private ImageNoteRepository imageNoteRepository;
+
     @Transactional
     @Override
     public NoteDto createNote(NoteRequestDto noteRequestDto) {
-        User user = userRepository
-                .findById(1l)
-                .orElseThrow(() -> new BadRequestException(String
-                        .format(messageTranslator
-                                        .toLocale(MessageCode.USER_ID_NOT_FOUND)
-                                , 1l)));
-
         try {
-            Note note = NoteMapper.INSTANCE.fromRequestDto(noteRequestDto);
-            note.setUser(user);
-
-            note = noteRepository.save(note);
-            return NoteMapper.INSTANCE.fromEntity(note);
+            BasicNote basicNote = fromRequestDto(noteRequestDto);
+            basicNote = noteRepository.save(basicNote);
+            return fromEntity(basicNote);
         } catch (Exception e) {
-            logger.error("Exception occur when try to create student {} {}", noteRequestDto.getTitle(), e.getMessage());
-            throw new AppException("Exception occur when try to create student", e.getCause());
+            logger.error("Exception occur when try to create Basic note {} {}", noteRequestDto.getTitle(), e.getMessage());
+            throw new AppException("Exception occur when try to create basic note", e.getCause());
         }
     }
 
@@ -99,12 +95,12 @@ public class NoteServiceImpl implements NoteService {
     @Transactional
     @Override
     public void deleteNote(Long id) {
-        Note note = noteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String
+        BasicNote basicNote = noteRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(String
                 .format(messageTranslator
                         .toLocale(MessageCode.NOTE_ID_NOT_FOUND), id)));
         try {
 
-            noteRepository.delete(note);
+            noteRepository.delete(basicNote);
         } catch (Exception e) {
             logger.error("Exception occur when try to delete Note {} {}", id, e.getCause());
             throw new AppException("Exception occur when try to delete Note", e.getCause());
@@ -122,7 +118,7 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public Page<Note> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest filterRequest) {
+    public Page<BasicNote> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest filterRequest) {
 //        Integer _pageIndex = PagingConstant.DEFAULT_PAGE_INDEX;
 //        Integer _pageSize = PagingConstant.DEFAULT_PAGE_SIZE;
 //
@@ -187,4 +183,21 @@ public class NoteServiceImpl implements NoteService {
                 });
     }
 
+    @Override
+    public NoteDto fromEntity(BasicNote basicNote) {
+        return BasicNoteMapper.INSTANCE.fromEntity(basicNote);
+    }
+
+    @Override
+    public BasicNote fromRequestDto(NoteRequestDto requestDto) {
+        User user = userRepository
+                .findById(1l)
+                .orElseThrow(() -> new BadRequestException(String
+                         .format(messageTranslator
+                                        .toLocale(MessageCode.USER_ID_NOT_FOUND)
+                                , 1l)));
+        BasicNote basicNote = BasicNoteMapper.INSTANCE.fromRequestDto(requestDto);
+        basicNote.setUser(user);
+        return basicNote;
+    }
 }

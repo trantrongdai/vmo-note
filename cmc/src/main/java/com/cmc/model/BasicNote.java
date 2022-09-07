@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "note")
-public class Note extends BaseEntity {
+public class BasicNote extends BaseEntity {
 
     @Size(max = 100)
     @Nationalized
@@ -20,9 +20,7 @@ public class Note extends BaseEntity {
     @Nationalized
     private String description;
 
-    private String imageUrl;
-
-    private String checkBoxStatus;
+    private String noteType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -44,20 +42,12 @@ public class Note extends BaseEntity {
         this.description = description;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getNoteType() {
+        return noteType;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public String getCheckBoxStatus() {
-        return checkBoxStatus;
-    }
-
-    public void setCheckBoxStatus(String checkBoxStatus) {
-        this.checkBoxStatus = checkBoxStatus;
+    public void setNoteType(String noteType) {
+        this.noteType = noteType;
     }
 
     public User getUser() {
