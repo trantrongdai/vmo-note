@@ -24,6 +24,8 @@ public class NoteRequestDto {
 
     private String noteType;
 
+    private boolean completed = false;
+
     public String getTitle() {
         return title;
     }
@@ -62,5 +64,13 @@ public class NoteRequestDto {
 
     public void setNoteType(String noteType) {
         this.noteType = noteType;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }

@@ -19,6 +19,8 @@ public class BasicNote extends BaseEntity {
 
     private String noteType;
 
+    private boolean completed = false;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -27,7 +29,7 @@ public class BasicNote extends BaseEntity {
     private CheckBoxNote checkBoxNote;
 
     @OneToOne(mappedBy = "basicNote", cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
-    private ImageNote image;
+    private ImageNote imageNote;
 
     public BasicNote() {
     }
@@ -61,11 +63,35 @@ public class BasicNote extends BaseEntity {
         this.noteType = noteType;
     }
 
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public CheckBoxNote getCheckBoxNote() {
+        return checkBoxNote;
+    }
+
+    public void setCheckBoxNote(CheckBoxNote checkBoxNote) {
+        this.checkBoxNote = checkBoxNote;
+    }
+
+    public ImageNote getImageNote() {
+        return imageNote;
+    }
+
+    public void setImageNote(ImageNote imageNote) {
+        this.imageNote = imageNote;
     }
 }

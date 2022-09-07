@@ -4,7 +4,7 @@ import javax.persistence.*;
 
 
 @Entity
-@Table(name = "checkbox")
+@Table(name = "check_box")
 public class CheckBox extends BaseEntity {
 
     @Column(name = "name")

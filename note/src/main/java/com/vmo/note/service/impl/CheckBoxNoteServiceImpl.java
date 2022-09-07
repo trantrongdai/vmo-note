@@ -20,6 +20,7 @@ import com.vmo.note.repository.CheckBoxRepository;
 import com.vmo.note.repository.UserRepository;
 import com.vmo.note.service.CheckBoxNoteService;
 import com.vmo.note.service.NoteConverterStrategy;
+import com.vmo.note.util.UserDetailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,12 +111,13 @@ public class CheckBoxNoteServiceImpl implements CheckBoxNoteService, NoteConvert
 
     @Override
     public CheckBoxNote getCreateEntity(NoteRequestDto requestDto) {
+        String username = UserDetailUtils.getLoggedInUserName();
         User user = userRepository
-                .findById(1l)
+                .findByUsername(username)
                 .orElseThrow(() -> new BadRequestException(String
                         .format(messageTranslator
-                                        .toLocale(MessageCode.USER_ID_NOT_FOUND)
-                                , 1l)));
+                                        .toLocale(MessageCode.USER_NAME_NOT_FOUND)
+                                , username)));
         BasicNote basicNote = BasicNoteMapper.INSTANCE.fromRequestDto(requestDto);
         basicNote.setUser(user);
         CheckBoxNote checkBoxNote = new CheckBoxNote();
@@ -144,6 +146,7 @@ public class CheckBoxNoteServiceImpl implements CheckBoxNoteService, NoteConvert
         }
         basicNote.setTitle(requestDto.getTitle());
         basicNote.setDescription(requestDto.getDescription());
+        basicNote.setCompleted(requestDto.isCompleted());
 
         CheckBoxNote checkBoxNote = checkBoxNoteRepository.findByBasicNote(basicNote);
         if (Objects.isNull(checkBoxNote)) {

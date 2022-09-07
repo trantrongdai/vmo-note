@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  * Student controller
  */
 @RestController
-@RequestMapping("/note")
+@RequestMapping("/api/v1/note")
 public class NoteController extends RestBaseController {
     private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
 

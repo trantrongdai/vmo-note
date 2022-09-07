@@ -15,6 +15,7 @@ import com.vmo.note.repository.BasicNoteRepository;
 import com.vmo.note.repository.ImageNoteRepository;
 import com.vmo.note.repository.UserRepository;
 import com.vmo.note.service.ImageNoteService;
+import com.vmo.note.util.UserDetailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,12 +92,13 @@ public class ImageNoteServiceImpl implements ImageNoteService {
 
     @Override
     public ImageNote getCreateEntity(NoteRequestDto requestDto) {
+        String username = UserDetailUtils.getLoggedInUserName();
         User user = userRepository
-                .findById(1l)
+                .findByUsername(username)
                 .orElseThrow(() -> new BadRequestException(String
                         .format(messageTranslator
-                                        .toLocale(MessageCode.USER_ID_NOT_FOUND)
-                                , 1l)));
+                                        .toLocale(MessageCode.USER_NAME_NOT_FOUND)
+                                , username)));
         BasicNote basicNote = BasicNoteMapper.INSTANCE.fromRequestDto(requestDto);
         basicNote.setUser(user);
         ImageNote imageNote = new ImageNote();
@@ -116,6 +118,7 @@ public class ImageNoteServiceImpl implements ImageNoteService {
 
         basicNote.setTitle(requestDto.getTitle());
         basicNote.setDescription(requestDto.getDescription());
+        basicNote.setCompleted(requestDto.isCompleted());
 
         ImageNote imageNote = imageNoteRepository.findByBasicNote(basicNote);
         if (Objects.isNull(imageNote)) {

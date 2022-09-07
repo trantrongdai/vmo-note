@@ -54,7 +54,7 @@ public class NoteControllerTests {
         noteDto.setDescription("description");
         noteDto.setNoteType("BASIC_NOTE");
 
-        mockMvc.perform(post("/note").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/note").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(noteDto)))
                 .andExpect(status().isCreated())
                 .andDo(print());
@@ -68,7 +68,7 @@ public class NoteControllerTests {
         noteDto.setDescription("description");
 
         when(basicNoteService.getNoteDetails(id)).thenReturn(noteDto);
-        mockMvc.perform(get("/note/{id}", id))
+        mockMvc.perform(get("/api/v1/note/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.noteDto.title", Matchers.is("title")))
                 .andExpect(jsonPath("$.data.noteDto.description", Matchers.is("description")))
@@ -80,7 +80,7 @@ public class NoteControllerTests {
         long id = 100L;
 
         when(basicNoteService.getNoteDetails(id)).thenThrow(new ResourceNotFoundException("not founded"));
-        mockMvc.perform(get("/note/{id}", id))
+        mockMvc.perform(get("/api/v1/note/{id}", id))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -98,7 +98,7 @@ public class NoteControllerTests {
         Integer pageSize = 10;
         NoteFilterRequest filterRequest = new NoteFilterRequest();
         when(basicNoteService.findAll(pageIndex, pageSize, filterRequest)).thenReturn(page);
-        mockMvc.perform(post("/note/list").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/note/list").contentType(MediaType.APPLICATION_JSON)
                 .param("page", "1")
                 .param("pageSize", "10")
                 .content(objectMapper.writeValueAsString(filterRequest)))

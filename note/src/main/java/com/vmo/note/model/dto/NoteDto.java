@@ -19,6 +19,8 @@ public class NoteDto {
 
     private String noteType;
 
+    private boolean completed = false;
+
     public NoteDto() {
     }
 
@@ -73,5 +75,13 @@ public class NoteDto {
 
     public void setNoteType(String noteType) {
         this.noteType = noteType;
+    }
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 }
