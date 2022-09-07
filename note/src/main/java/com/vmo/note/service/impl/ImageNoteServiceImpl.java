@@ -4,7 +4,6 @@ import com.vmo.note.constants.MessageCode;
 import com.vmo.note.dto.request.NoteRequestDto;
 import com.vmo.note.enums.NoteType;
 import com.vmo.note.exceptions.AppException;
-import com.vmo.note.exceptions.BadRequestException;
 import com.vmo.note.exceptions.ResourceNotFoundException;
 import com.vmo.note.mapper.BasicNoteMapper;
 import com.vmo.note.model.BasicNote;
@@ -13,9 +12,8 @@ import com.vmo.note.model.User;
 import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
 import com.vmo.note.repository.ImageNoteRepository;
-import com.vmo.note.repository.UserRepository;
 import com.vmo.note.service.ImageNoteService;
-import com.vmo.note.util.UserDetailUtils;
+import com.vmo.note.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class ImageNoteServiceImpl implements ImageNoteService {
     MessageTranslator messageTranslator;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private BasicNoteRepository basicNoteRepository;
@@ -92,13 +90,7 @@ public class ImageNoteServiceImpl implements ImageNoteService {
 
     @Override
     public ImageNote getCreateEntity(NoteRequestDto requestDto) {
-        String username = UserDetailUtils.getLoggedInUserName();
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new BadRequestException(String
-                        .format(messageTranslator
-                                        .toLocale(MessageCode.USER_NAME_NOT_FOUND)
-                                , username)));
+        User user = userService.getLoggedInUser();
         BasicNote basicNote = BasicNoteMapper.INSTANCE.fromRequestDto(requestDto);
         basicNote.setUser(user);
         ImageNote imageNote = new ImageNote();

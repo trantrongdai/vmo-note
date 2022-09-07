@@ -51,4 +51,16 @@ public interface BasicNoteService extends NoteConverterStrategy<BasicNote> {
      * @return Page<Note>
      */
     Page<BasicNote> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest filterRequest);
+
+    /**
+     * Checking that logged in user is owner of Note or not
+     *
+     * @param noteId
+     */
+    void checkingOwner(Long noteId);
+
+    /**
+     * Count all uncompleted note
+     */
+    int countUncompletedNote();
 }

@@ -14,11 +14,10 @@ import com.vmo.note.model.User;
 import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
 import com.vmo.note.repository.ImageNoteRepository;
-import com.vmo.note.repository.UserRepository;
 import com.vmo.note.service.BasicNoteService;
 import com.vmo.note.service.CheckBoxNoteService;
 import com.vmo.note.service.ImageNoteService;
-import com.vmo.note.util.UserDetailUtils;
+import com.vmo.note.service.UserService;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +46,7 @@ public class BasicBasicNoteServiceImpl implements BasicNoteService {
     private String studentPrefix;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private BasicNoteRepository basicNoteRepository;
@@ -152,12 +151,30 @@ public class BasicBasicNoteServiceImpl implements BasicNoteService {
 
         Page<BasicNote> results = Page.empty();
         try {
-            results = basicNoteRepository.findAll(pageable);
+            results = basicNoteRepository.findAllByUser(userService.getLoggedInUser(), pageable);
         } catch (Exception exception) {
             logger.error("Exception occur when trying to list Basic note! {}", exception.getMessage());
             return results;
         }
         return results;
+    }
+
+    @Override
+    public void checkingOwner(Long noteId) {
+        User user = userService.getLoggedInUser();
+        if (!basicNoteRepository.existsByUserAndId(user, noteId)) {
+            throw new BadRequestException(String
+                    .format(messageTranslator
+                                    .toLocale(MessageCode.USER_IS_NOT_AN_OWNER_OF_NOTE)
+                            , noteId));
+        }
+    }
+
+    @Override
+    public int countUncompletedNote() {
+        List<BasicNote> uncompletedNoteOfLoggedInUser = basicNoteRepository
+                .findAllByUserAndCompleted(userService.getLoggedInUser(), false);
+        return Objects.isNull(uncompletedNoteOfLoggedInUser) ? 0 : uncompletedNoteOfLoggedInUser.size();
     }
 
     @Override
@@ -167,13 +184,7 @@ public class BasicBasicNoteServiceImpl implements BasicNoteService {
 
     @Override
     public BasicNote getCreateEntity(NoteRequestDto requestDto) {
-        String username = UserDetailUtils.getLoggedInUserName();
-        User user = userRepository
-                .findByUsername(username)
-                .orElseThrow(() -> new BadRequestException(String
-                        .format(messageTranslator
-                                        .toLocale(MessageCode.USER_NAME_NOT_FOUND)
-                                , username)));
+        User user = userService.getLoggedInUser();
         BasicNote basicNote = BasicNoteMapper.INSTANCE.fromRequestDto(requestDto);
         basicNote.setUser(user);
         return basicNote;

@@ -5,6 +5,8 @@ package com.vmo.note.constants;
  */
 public class MessageCode {
 
+    public static final String USER_IS_NOT_AN_OWNER_OF_NOTE = "user.is.not.an.owner.of.note";
+
     public static final String BASIC_NOTE_ID_NOT_FOUND = "basic.note.id.not.found";
 
     public static final String IMAGE_NOTE_ID_NOT_FOUND = "image.note.id.not.found";

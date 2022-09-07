@@ -11,6 +11,7 @@ import com.vmo.note.model.dto.UserDto;
 import com.vmo.note.repository.RoleRepository;
 import com.vmo.note.repository.UserRepository;
 import com.vmo.note.service.UserService;
+import com.vmo.note.util.UserDetailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +77,23 @@ public class UserServiceImpl implements UserService {
             throw new BadRequestException(messageTranslator
                     .toLocale(MessageCode.USER_CREATE_WITHOUT_ROLE_VALID));
         }
+    }
+
+    @Override
+    public User getLoggedInUser() {
+        String username = UserDetailUtils.getLoggedInUserName();
+        return userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new BadRequestException(String
+                        .format(messageTranslator
+                                        .toLocale(MessageCode.USER_NAME_NOT_FOUND)
+                                , username)));
+    }
+
+    @Override
+    public UserDto getLoggedInUserDto() {
+        User user = getLoggedInUser();
+        return UserMapper.INSTANCE.fromEntity(user);
     }
 
 }
