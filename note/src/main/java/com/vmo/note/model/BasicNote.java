@@ -39,6 +39,12 @@ public class BasicNote extends BaseEntity {
         this.description = description;
     }
 
+    public BasicNote(@Size(max = 100) String title, @Size(max = 500) String description, String noteType) {
+        this.title = title;
+        this.description = description;
+        this.noteType = noteType;
+    }
+
     public String getTitle() {
         return title;
     }

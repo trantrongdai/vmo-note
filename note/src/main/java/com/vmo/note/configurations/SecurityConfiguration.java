@@ -5,6 +5,7 @@ import com.vmo.note.authentication.JwtAuthenticationEntryPoint;
 import com.vmo.note.authentication.JwtAuthenticationFilter;
 import com.vmo.note.authentication.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,7 +21,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
+
+    @Autowired(required=true)
     JwtUserDetailsService customUserDetailsService;
 
     @Autowired

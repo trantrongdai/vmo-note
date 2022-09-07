@@ -13,6 +13,12 @@ public class CheckBoxDto {
     public CheckBoxDto() {
     }
 
+    public CheckBoxDto(Long id, String name, String value) {
+        this.id = id;
+        this.name = name;
+        this.value = value;
+    }
+
     public Long getId() {
         return id;
     }

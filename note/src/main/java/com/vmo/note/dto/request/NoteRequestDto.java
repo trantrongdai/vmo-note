@@ -26,6 +26,15 @@ public class NoteRequestDto {
 
     private boolean completed = false;
 
+    public NoteRequestDto() {
+    }
+
+    public NoteRequestDto(@NotNull(message = "Note title is required") @Length(max = 100) String title, @Length(max = 500) String description, String noteType) {
+        this.title = title;
+        this.description = description;
+        this.noteType = noteType;
+    }
+
     public String getTitle() {
         return title;
     }

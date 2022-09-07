@@ -13,10 +13,7 @@ import com.vmo.note.model.BasicNote;
 import com.vmo.note.model.User;
 import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
-import com.vmo.note.repository.ImageNoteRepository;
 import com.vmo.note.service.BasicNoteService;
-import com.vmo.note.service.CheckBoxNoteService;
-import com.vmo.note.service.ImageNoteService;
 import com.vmo.note.service.UserService;
 import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
@@ -42,23 +39,11 @@ public class BasicBasicNoteServiceImpl implements BasicNoteService {
     @Autowired
     MessageTranslator messageTranslator;
 
-    @Value("${student.prefix:TT}")
-    private String studentPrefix;
-
     @Autowired
     private UserService userService;
 
     @Autowired
     private BasicNoteRepository basicNoteRepository;
-
-    @Autowired
-    private ImageNoteRepository imageNoteRepository;
-
-    @Autowired
-    private ImageNoteService imageNoteService;
-
-    @Autowired
-    private CheckBoxNoteService checkBoxNoteService;
 
     @Transactional
     @Override
