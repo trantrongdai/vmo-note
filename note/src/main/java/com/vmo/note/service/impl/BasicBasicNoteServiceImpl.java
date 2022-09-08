@@ -105,11 +105,11 @@ public class BasicBasicNoteServiceImpl implements BasicNoteService {
         Integer _pageIndex = PagingConstant.DEFAULT_PAGE_INDEX;
         Integer _pageSize = PagingConstant.DEFAULT_PAGE_SIZE;
 
-        if (!Objects.isNull(pageIndex)) {
+        if (!Objects.nonNull(pageIndex)) {
             _pageIndex = pageIndex;
         }
 
-        if (!Objects.isNull(pageSize)) {
+        if (!Objects.nonNull(pageSize)) {
             _pageSize = pageSize;
         }
         List<Sort.Order> orders = new ArrayList<>();

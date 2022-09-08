@@ -1,22 +1,35 @@
 import { createWebHistory, createRouter } from "vue-router";
 const routes = [
   {
-    path: "/list",
-    alias: "/list",
-    name: "list student",
-    component: () => import("./components/StudentList"),
+    path: "/list-note",
+    alias: "/list-note",
+    name: "list note",
+    component: () => import("./components/NoteList"),
   },
   {
-    path: "/student/:id",
-    name: "student-details",
-    component: () => import("./components/StudentDetail")
+    path: "/note/:id",
+    name: "note-details",
+    component: () => import("./components/NoteDetail")
   },
   {
-    path: "/add",
-    alias: "/add",
-    name: "add student",
-    component: () => import("./components/AddStudent"),
+    path: "/add-basic-note",
+    alias: "/add-basic-note",
+    name: "add Basic note",
+    component: () => import("./components/AddBasicNote"),
   },
+  {
+    path: "/add-image-note",
+    alias: "/add-image-note",
+    name: "add image note",
+    component: () => import("./components/AddImageNote"),
+  },
+  {
+    path: "/add-checkbox-note",
+    alias: "/add-checkbox-note",
+    name: "add checkbox note",
+    component: () => import("./components/AddCheckBoxNote"),
+  },
+  
 ];
 
 const router = createRouter({

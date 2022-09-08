@@ -1,0 +1,17 @@
+[
+            {
+                "name": "checkbox1",
+                "value": "value",
+                "selected": true
+            },
+            {
+                "name": "checkbox2",
+                "value": "value",
+                "selected": false
+            },
+            {
+                "name": "checkbox3",
+                "value": "value",
+                "selected": true
+            }
+        ]
