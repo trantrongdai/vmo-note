@@ -39,11 +39,11 @@
 
         <div class="form-group Note-form">
          <label for="description">Note options</label>
-          <button type="button" on-click="addCheckBox()" class="btn btn-success" style="margin-top:20px">Add options</button>
-          <div id="checkboxes" v-for="(checkbox, index) in checkboxes" v-bind:key="index" class="m-2">
-          <input class="mx-1" type="checkbox" :value="checkbox.value" v-model="checkbox.selected"/>
-          <label>{{checkbox.name}}</label>
-        </div>
+
+         <li v-for="(item, index) in note.checkBoxes" :key="index">
+          <input class="mx-1" type="checkbox" :value="item.value" v-model="item.selected"/>
+          <label>{{item.name}}</label>
+        </li>
       </div>
 
         <button type="submit" class="btn btn-success" style="margin-top:20px">Submit</button>
@@ -70,25 +70,39 @@ export default {
         description: "",
         noteType: "CHECKBOX_NOTE",
         imageUrl: "",
-        checkBoxes : [],
-        completed: false
+        completed: false,
+        checkBoxes: [
+            {
+                name: "checkbox1",
+                value: "value",
+                selected: false
+            },
+            {
+                name: "checkbox2",
+                value: "value",
+                selected: false
+            },
+            {
+                name: "checkbox3",
+                value: "value",
+                selected: false
+            }
+        ]
       },
-      selectedClazzId: null,
-      clazzes: {},
       submitted: false
     };
   },
   mounted() {
     
-    console.log(this.checkBoxes);
+    console.log("checkBoxes" + this.checkBoxes);
   },
   methods: {
     addCheckBox() {
-this.checkboxes = [{
-                name: "checkbox3",
-                value: "value",
-                selected: true
-            }]
+      this.checkBoxes.push({
+                "name": "checkbox3",
+                "value": "value",
+                "selected": true
+            })
     },
     saveNote() {
       var data = {
@@ -96,7 +110,7 @@ this.checkboxes = [{
         description: this.note.description,
         noteType: "CHECKBOX_NOTE",
         completed: this.note.completed,
-        checkBoxes : this.checkboxes
+        checkBoxes : this.note.checkBoxes
       };
 
       NoteService.create(data)
@@ -105,6 +119,7 @@ this.checkboxes = [{
           this.note.id = response.data.id;
           console.log(response.data);
           this.submitted = true;
+          this.$router.push('/list-note')
         })
         .catch(e => {
           console.log(e);

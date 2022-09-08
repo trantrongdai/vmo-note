@@ -85,6 +85,7 @@ export default {
           this.note.id = response.data.id;
           console.log(response.data);
           this.submitted = true;
+          this.$router.push('/list-note')
         })
         .catch(e => {
           console.log(e);

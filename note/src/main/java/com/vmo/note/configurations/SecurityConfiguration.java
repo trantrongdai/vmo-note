@@ -72,7 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/api/**")
 //                .permitAll()
                 .antMatchers("/api/v1/note/**")
-                .permitAll();
+                .authenticated();
 
         http.headers().frameOptions().disable();
         // Add our custom JWT security filter

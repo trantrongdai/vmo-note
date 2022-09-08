@@ -126,6 +126,7 @@ export default {
         .then(response => {
           console.log(response.data);
           this.message = 'The Note was updated successfully!';
+          this.$router.push('/list-note')
         })
         .catch(e => {
           console.log(e);

@@ -71,13 +71,11 @@ export default {
       note: {
         title: "",
         description: "",
-        noteType: "BASIC_NOTE",
+        noteType: "IMAGE_NOTE",
         imageUrl: "",
         checkBoxes : [],
         completed: false
       },
-      selectedClazzId: null,
-      clazzes: {},
       submitted: false
     };
   },
@@ -88,7 +86,7 @@ export default {
       var data = {
         title: this.note.title,
         description: this.note.description,
-        noteType: "BASIC_NOTE",
+        noteType: "IMAGE_NOTE",
         imageUrl: this.note.imageUrl,
         completed: this.note.completed
       };
@@ -99,6 +97,7 @@ export default {
           this.note.id = response.data.id;
           console.log(response.data);
           this.submitted = true;
+          this.$router.push('/list-note')
         })
         .catch(e => {
           console.log(e);
