@@ -71,7 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .permitAll()
 //                .antMatchers("/api/**")
 //                .permitAll()
-                .antMatchers("/api/v1/note/**")
+                .antMatchers("/api/v1/notes/**")
                 .authenticated();
 
         http.headers().frameOptions().disable();

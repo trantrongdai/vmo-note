@@ -28,7 +28,7 @@
           </div>
         </td>
          <td>
-          <router-link :to="'/note/' + item.id" class="m-3 btn btn-sm btn-info">Edit</router-link>
+          <router-link :to="'/notes/' + item.id" class="m-3 btn btn-sm btn-info">Edit</router-link>
           <button border:none
             @click="deleteNote(item.id)"
             id="btn-delete"

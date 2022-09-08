@@ -63,7 +63,7 @@ public class NoteControllerTests {
     void shouldCreateNote() throws Exception {
         NoteDto noteDto = new NoteDto("title", "description", "BASIC_NOTE");
 
-        mockMvc.perform(post("/api/v1/note").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/notes").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(noteDto)))
                 .andExpect(status().isCreated())
                 .andDo(print());
@@ -76,7 +76,7 @@ public class NoteControllerTests {
         NoteDto noteDto = new NoteDto("title", "description", "BASIC_NOTE");
 
         when(basicNoteService.getNoteDetails(id)).thenReturn(noteDto);
-        mockMvc.perform(get("/api/v1/note/{id}", id))
+        mockMvc.perform(get("/api/v1/notes/{id}", id))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.noteDto.title", Matchers.is("title")))
                 .andExpect(jsonPath("$.data.noteDto.description", Matchers.is("description")))
@@ -89,7 +89,7 @@ public class NoteControllerTests {
         long id = 100L;
 
         when(basicNoteService.getNoteDetails(id)).thenThrow(new ResourceNotFoundException("not founded"));
-        mockMvc.perform(get("/api/v1/note/{id}", id))
+        mockMvc.perform(get("/api/v1/notes/{id}", id))
                 .andExpect(status().isNotFound())
                 .andDo(print());
     }
@@ -105,7 +105,7 @@ public class NoteControllerTests {
         when(basicNoteService.getNoteDetails(id)).thenReturn(noteDto);
         when(basicNoteService.updateNote(Mockito.anyLong(), Mockito.any())).thenReturn(updatedNote);
 
-        mockMvc.perform(put("/api/v1/note/{id}", id).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/api/v1/notes/{id}", id).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedNote)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.noteDto..title").value(updatedNote.getTitle()))
@@ -130,7 +130,7 @@ public class NoteControllerTests {
         when(imageNoteService.getNoteDetails(id)).thenReturn(noteDto);
         when(imageNoteService.updateNote(Mockito.anyLong(), Mockito.any())).thenReturn(updatedNote);
 
-        mockMvc.perform(put("/api/v1/note/{id}", id).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/api/v1/notes/{id}", id).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedNote)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.noteDto.title").value(updatedNote.getTitle()))
@@ -163,7 +163,7 @@ public class NoteControllerTests {
         when(checkBoxNoteService.getNoteDetails(id)).thenReturn(noteDto);
         when(checkBoxNoteService.updateNote(Mockito.anyLong(), Mockito.any())).thenReturn(updatedNote);
 
-        mockMvc.perform(put("/api/v1/note/{id}", id).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(put("/api/v1/notes/{id}", id).contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(updatedNote)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.noteDto.title").value(updatedNote.getTitle()))
@@ -187,7 +187,7 @@ public class NoteControllerTests {
         Integer pageSize = 10;
         NoteFilterRequest filterRequest = new NoteFilterRequest();
         when(basicNoteService.findAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.any())).thenReturn(page);
-        mockMvc.perform(post("/api/v1/note/list").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/api/v1/notes/list").contentType(MediaType.APPLICATION_JSON)
                 .param("page", "1")
                 .param("pageSize", "10")
                 .content(objectMapper.writeValueAsString(filterRequest)))

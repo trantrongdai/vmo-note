@@ -7,7 +7,7 @@ const routes = [
     component: () => import("./components/NoteList"),
   },
   {
-    path: "/note/:id",
+    path: "/notes/:id",
     name: "note-details",
     component: () => import("./components/NoteDetail")
   },

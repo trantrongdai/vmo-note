@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * Student controller
  */
 @RestController
-@RequestMapping("/api/v1/note")
+@RequestMapping("/api/v1/notes")
 public class NoteController extends RestBaseController {
     private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
 
