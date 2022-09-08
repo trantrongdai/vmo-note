@@ -1,5 +1,8 @@
 package com.vmo.note.model.dto;
 
+/**
+ * Checkbox Dto
+ */
 public class CheckBoxDto {
 
     private Long id;

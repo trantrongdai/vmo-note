@@ -1,7 +1,7 @@
 import http from "../http-common";
 class NoteService {
-  getNotes(data) {
-    return http.post("/notes/list?page=0&pageSize=50", data);
+  getNotes() {
+    return http.get("/notes?page=0&pageSize=50");
   }
   
   getNoteById(id) {

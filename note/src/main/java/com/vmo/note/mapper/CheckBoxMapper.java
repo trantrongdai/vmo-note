@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Clazz mapper
+ * Checkbox mapper
  */
 @Mapper
 public interface CheckBoxMapper {

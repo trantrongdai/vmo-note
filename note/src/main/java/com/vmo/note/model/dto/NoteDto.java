@@ -3,7 +3,7 @@ package com.vmo.note.model.dto;
 import java.util.List;
 
 /**
- * Clazz dto
+ * Note dto
  */
 public class NoteDto {
 

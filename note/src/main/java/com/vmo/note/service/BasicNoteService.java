@@ -47,10 +47,9 @@ public interface BasicNoteService extends NoteConverterStrategy<BasicNote> {
      *
      * @param pageIndex
      * @param pageSize
-     * @param filterRequest
      * @return Page<Note>
      */
-    Page<BasicNote> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest filterRequest);
+    Page<BasicNote> findAll(Integer pageIndex, Integer pageSize );
 
     /**
      * Checking that logged in user is owner of Note or not

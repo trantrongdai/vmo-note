@@ -2,6 +2,9 @@ package com.vmo.note.util;
 
 import java.time.LocalDateTime;
 
+/**
+ * Datetime utils
+ */
 public final class DateTimeUtils {
     private DateTimeUtils() {
     }

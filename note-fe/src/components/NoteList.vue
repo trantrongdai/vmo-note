@@ -58,8 +58,7 @@ export default {
   },
   methods: {
     getAllNotes() {
-      let data = {sortBy: { id: "desc" , name: 'title'}};
-      NoteService.getNotes(data)
+      NoteService.getNotes()
         .then(response => {
           let responseData = response.data;
           if (responseData !== null && responseData.data != null) {

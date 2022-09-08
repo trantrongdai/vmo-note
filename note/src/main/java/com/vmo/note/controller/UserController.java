@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
+/**
+ * UserController class
+ */
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {

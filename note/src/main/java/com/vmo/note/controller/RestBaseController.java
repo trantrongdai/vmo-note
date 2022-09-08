@@ -22,6 +22,13 @@ public abstract class RestBaseController {
     protected static final int DEFAULT_PAGE_SIZE = PagingConstant.DEFAULT_PAGE_SIZE;
     protected static final int MAX_PAGE_SIZE = 100000; //TODO max page is too large, maybe a risk data issue
 
+    /**
+     * get Page reuest
+     * @param pageIndex
+     * @param pageSize
+     * @param sort
+     * @return Pageable
+     */
     protected Pageable pageRequest(Integer pageIndex, Integer pageSize, Sort sort) {
         if (pageIndex == null) {
             pageIndex = 0;

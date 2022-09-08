@@ -67,6 +67,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Validate request data before create
+     *
+     * @param userCreatedReq
+     */
     private void validateRequestData(UserRequestDto userCreatedReq) {
         if (userRepository.existsByUsername(userCreatedReq.getUsername())) {
             throw new BadRequestException(messageTranslator

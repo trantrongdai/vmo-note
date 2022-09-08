@@ -14,7 +14,6 @@ import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
 import com.vmo.note.service.BasicNoteService;
 import com.vmo.note.service.UserService;
-import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * BasicNoteServiceImpl class
+ */
 @Service
-public class BasicBasicNoteServiceImpl implements BasicNoteService {
+public class BasicNoteServiceImpl implements BasicNoteService {
 
-    private static final Logger logger = LoggerFactory.getLogger(BasicBasicNoteServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(BasicNoteServiceImpl.class);
 
     @Autowired
     MessageTranslator messageTranslator;
@@ -110,7 +112,7 @@ public class BasicBasicNoteServiceImpl implements BasicNoteService {
         if (!Objects.nonNull(pageSize)) {
             _pageSize = pageSize;
         }
-        Pageable pageable = PageRequest.of(_pageIndex, _pageSize, null);
+        Pageable pageable = PageRequest.of(_pageIndex, _pageSize, Sort.by(new ArrayList<>()));
 
         Page<BasicNote> results = Page.empty();
         try {

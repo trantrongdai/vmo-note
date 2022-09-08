@@ -4,7 +4,6 @@ import com.vmo.note.constants.MessageCode;
 import com.vmo.note.dto.request.NoteRequestDto;
 import com.vmo.note.enums.NoteType;
 import com.vmo.note.exceptions.AppException;
-import com.vmo.note.exceptions.BadRequestException;
 import com.vmo.note.exceptions.ResourceNotFoundException;
 import com.vmo.note.mapper.BasicNoteMapper;
 import com.vmo.note.mapper.CheckBoxMapper;
@@ -17,11 +16,9 @@ import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
 import com.vmo.note.repository.CheckBoxNoteRepository;
 import com.vmo.note.repository.CheckBoxRepository;
-import com.vmo.note.repository.UserRepository;
 import com.vmo.note.service.CheckBoxNoteService;
 import com.vmo.note.service.NoteConverterStrategy;
 import com.vmo.note.service.UserService;
-import com.vmo.note.util.UserDetailUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +32,9 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * CheckBoxNoteServiceImpl class
+ */
 @Service
 public class CheckBoxNoteServiceImpl implements CheckBoxNoteService, NoteConverterStrategy<CheckBoxNote> {
 

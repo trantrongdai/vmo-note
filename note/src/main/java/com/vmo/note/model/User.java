@@ -30,7 +30,6 @@ public class User extends BaseEntity {
     @NotBlank
     private String email;
 
-
     @OneToMany(mappedBy = "user")
     private Set<BasicNote> basicNotes;
 

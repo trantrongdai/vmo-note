@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Clazz mapper
+ * User mapper
  */
 @Mapper
 public interface UserMapper {

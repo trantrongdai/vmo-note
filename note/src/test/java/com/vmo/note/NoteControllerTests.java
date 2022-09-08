@@ -186,11 +186,10 @@ public class NoteControllerTests {
         Integer pageIndex = 1;
         Integer pageSize = 10;
         NoteFilterRequest filterRequest = new NoteFilterRequest();
-        when(basicNoteService.findAll(Mockito.anyInt(), Mockito.anyInt(), Mockito.any())).thenReturn(page);
-        mockMvc.perform(post("/api/v1/notes/list").contentType(MediaType.APPLICATION_JSON)
+        when(basicNoteService.findAll(Mockito.anyInt(), Mockito.anyInt())).thenReturn(page);
+        mockMvc.perform(get("/api/v1/notes")
                 .param("page", "1")
-                .param("pageSize", "10")
-                .content(objectMapper.writeValueAsString(filterRequest)))
+                .param("pageSize", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.totalElements").value(notes.size()))
                 .andDo(print());

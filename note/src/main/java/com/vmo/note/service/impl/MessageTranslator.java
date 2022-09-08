@@ -20,6 +20,12 @@ public class MessageTranslator {
         this.messageSource = messageSource;
     }
 
+    /**
+     * toLocale
+     *
+     * @param msgCode
+     * @return
+     */
     public String toLocale(String msgCode) {
         Locale locale = LocaleContextHolder.getLocale();
         return messageSource.getMessage(msgCode, null, locale);

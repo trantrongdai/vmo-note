@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 /**
- * Student mapper
+ * BasicNote mapper
  */
 @Mapper
 public interface BasicNoteMapper {

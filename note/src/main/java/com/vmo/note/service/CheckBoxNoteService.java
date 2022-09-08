@@ -5,7 +5,7 @@ import com.vmo.note.model.CheckBoxNote;
 import com.vmo.note.model.dto.NoteDto;
 
 /**
- * Student serivce interface
+ * Checkbox note serivce interface
  */
 public interface CheckBoxNoteService extends NoteConverterStrategy<CheckBoxNote> {
     /**

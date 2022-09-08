@@ -3,7 +3,7 @@ package com.vmo.note;
 import com.vmo.note.model.BasicNote;
 import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
-import com.vmo.note.service.impl.BasicBasicNoteServiceImpl;
+import com.vmo.note.service.impl.BasicNoteServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ public class BasicBasicNoteServiceImplTests {
     private BasicNoteRepository basicNoteRepository;
 
     @InjectMocks
-    private BasicBasicNoteServiceImpl basicNoteService;
+    private BasicNoteServiceImpl basicNoteService;
 
     @Test
     @WithMockUser(username = "linhpv", roles = {"USER"})

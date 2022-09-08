@@ -5,7 +5,7 @@ import com.vmo.note.model.ImageNote;
 import com.vmo.note.model.dto.NoteDto;
 
 /**
- * Student serivce interface
+ * Image note serivce interface
  */
 public interface ImageNoteService extends NoteConverterStrategy<ImageNote> {
     /**

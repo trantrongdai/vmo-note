@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Clazz dto
+ * User dto
  */
 public class UserDto {
     private Long id;
