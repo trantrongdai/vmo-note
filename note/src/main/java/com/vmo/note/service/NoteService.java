@@ -2,14 +2,14 @@ package com.vmo.note.service;
 
 import com.vmo.note.dto.request.NoteRequestDto;
 import com.vmo.note.dto.request.filter.NoteFilterRequest;
+import com.vmo.note.dto.response.FilterResponseDto;
 import com.vmo.note.model.BasicNote;
 import com.vmo.note.model.dto.NoteDto;
-import org.springframework.data.domain.Page;
 
 /**
  * Student serivce interface
  */
-public interface BasicNoteService extends NoteConverterStrategy<BasicNote> {
+public interface NoteService extends NoteConverterStrategy<BasicNote> {
     /**
      * Create note
      *
@@ -49,5 +49,17 @@ public interface BasicNoteService extends NoteConverterStrategy<BasicNote> {
      * @param pageSize
      * @return Page<Note>
      */
-    Page<BasicNote> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest noteFilterRequest);
+    FilterResponseDto<NoteDto> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest noteFilterRequest);
+
+    /**
+     * Checking that logged in user is owner of Note or not
+     *
+     * @param noteId
+     */
+    void checkingOwner(Long noteId);
+
+    /**
+     * Count all uncompleted note
+     */
+    int countUncompletedNote();
 }

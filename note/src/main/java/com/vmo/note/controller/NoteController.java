@@ -2,48 +2,31 @@ package com.vmo.note.controller;
 
 import com.vmo.note.dto.RestResponse;
 import com.vmo.note.dto.request.NoteRequestDto;
+import com.vmo.note.dto.request.filter.NoteFilterRequest;
 import com.vmo.note.dto.response.FilterResponseDto;
 import com.vmo.note.dto.response.NoteResponseDto;
-import com.vmo.note.enums.NoteType;
 import com.vmo.note.enums.StatusCode;
-import com.vmo.note.mapper.BasicNoteMapper;
-import com.vmo.note.model.BasicNote;
 import com.vmo.note.model.dto.NoteDto;
-import com.vmo.note.service.BasicNoteService;
-import com.vmo.note.service.CheckBoxNoteService;
-import com.vmo.note.service.ImageNoteService;
-import com.vmo.note.service.UserService;
+import com.vmo.note.service.NoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.stream.Collectors;
 
 /**
- * Student controller
+ * Note controller
  */
 @RestController
 @RequestMapping("/api/v1/notes")
 public class NoteController extends RestBaseController {
     private static final Logger logger = LoggerFactory.getLogger(NoteController.class);
-
     @Autowired
-    BasicNoteService basicNoteService;
-
-    @Autowired
-    ImageNoteService imageNoteService;
-
-    @Autowired
-    CheckBoxNoteService checkBoxNoteService;
-
-    @Autowired
-    UserService userService;
+    NoteService noteService;
 
     /**
      * Create note
@@ -53,14 +36,7 @@ public class NoteController extends RestBaseController {
      */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> createNote(@Valid @RequestBody NoteRequestDto requestDto) {
-        NoteDto createdNote = null;
-        if (NoteType.BASIC_NOTE.name().equals(requestDto.getNoteType())) {
-            createdNote = basicNoteService.createNote(requestDto);
-        } else if (NoteType.IMAGE_NOTE.name().equals(requestDto.getNoteType())) {
-            createdNote = imageNoteService.createNote(requestDto);
-        } else if (NoteType.CHECKBOX_NOTE.name().equals(requestDto.getNoteType())) {
-            createdNote = checkBoxNoteService.createNote(requestDto);
-        }
+        NoteDto createdNote = noteService.createNote(requestDto);
         RestResponse response = new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
                 new NoteResponseDto(createdNote)).build();
         return new ResponseEntity(response, HttpStatus.CREATED);
@@ -76,15 +52,7 @@ public class NoteController extends RestBaseController {
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> updateNote(@PathVariable(value = "id") Long id,
                                                    @Valid @RequestBody NoteRequestDto requestDto) {
-        basicNoteService.checkingOwner(id);
-        NoteDto updatedNote = null;
-        if (NoteType.BASIC_NOTE.name().equals(requestDto.getNoteType())) {
-            updatedNote = basicNoteService.updateNote(id, requestDto);
-        } else if (NoteType.IMAGE_NOTE.name().equals(requestDto.getNoteType())) {
-            updatedNote = imageNoteService.updateNote(id, requestDto);
-        } else if (NoteType.CHECKBOX_NOTE.name().equals(requestDto.getNoteType())) {
-            updatedNote = checkBoxNoteService.updateNote(id, requestDto);
-        }
+        NoteDto updatedNote = noteService.updateNote(id, requestDto);
         RestResponse response = new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
                 new NoteResponseDto(updatedNote))
                 .build();
@@ -99,8 +67,7 @@ public class NoteController extends RestBaseController {
      */
     @DeleteMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public RestResponse<Long> deleteNote(@PathVariable(value = "id") Long id) {
-        basicNoteService.checkingOwner(id);
-        basicNoteService.deleteNote(id);
+        noteService.deleteNote(id);
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(), id).build();
     }
 
@@ -112,13 +79,7 @@ public class NoteController extends RestBaseController {
      */
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<RestResponse> getNoteDetails(@PathVariable(value = "id") Long id) {
-        basicNoteService.checkingOwner(id);
-        NoteDto noteDto = basicNoteService.getNoteDetails(id);
-        if (NoteType.IMAGE_NOTE.name().equals(noteDto.getNoteType())) {
-            noteDto = imageNoteService.getNoteDetails(id);
-        }else if (NoteType.CHECKBOX_NOTE.name().equals(noteDto.getNoteType())) {
-            noteDto = checkBoxNoteService.getNoteDetails(id);
-        }
+        NoteDto noteDto = noteService.getNoteDetails(id);
         NoteResponseDto noteResponseDto = new NoteResponseDto(noteDto);
         RestResponse response = new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
                 noteResponseDto)
@@ -134,20 +95,10 @@ public class NoteController extends RestBaseController {
      * @return RestResponse
      */
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<FilterResponseDto> listAllNote(@RequestParam Integer page, @RequestParam Integer pageSize) {
-        Page<BasicNote> basicNotes = basicNoteService.findAll(page, pageSize);
-        FilterResponseDto<NoteDto> filterResults = new FilterResponseDto<>();
-        filterResults
-                .setData(basicNotes
-                        .getContent()
-                        .stream()
-                        .map(basicNote -> BasicNoteMapper.INSTANCE.fromEntity(basicNote))
-                        .collect(Collectors.toList()));
-
-        filterResults.setPageSize(basicNotes.getNumberOfElements());
-        filterResults.setTotalElements(basicNotes.getTotalElements());
-        filterResults.setTotalPages(basicNotes.getTotalPages());
-
+    public RestResponse<FilterResponseDto> listAllNote(@RequestParam Integer page,
+                                                       @RequestParam Integer pageSize,
+                                                       @RequestBody @Valid NoteFilterRequest noteFilterRequest) {
+        FilterResponseDto<NoteDto> filterResults = noteService.findAll(page, pageSize, noteFilterRequest);
         return new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(), filterResults).build();
     }
 
@@ -158,7 +109,7 @@ public class NoteController extends RestBaseController {
      */
     @GetMapping(value = "/count-uncompleted", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Integer> countAllUnCompletedNote() {
-        int numberOfUncompletedNote = basicNoteService.countUncompletedNote();
+        int numberOfUncompletedNote = noteService.countUncompletedNote();
         RestResponse response = new RestResponse.RestResponseBuilder(StatusCode.SUCCESS.getValue(),
                 numberOfUncompletedNote)
                 .build();

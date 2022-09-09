@@ -3,9 +3,9 @@ package com.vmo.note.service.impl;
 import com.vmo.note.constants.MessageCode;
 import com.vmo.note.constants.PagingConstant;
 import com.vmo.note.dto.request.NoteRequestDto;
+import com.vmo.note.dto.request.filter.NoteFilterRequest;
 import com.vmo.note.enums.NoteType;
 import com.vmo.note.exceptions.AppException;
-import com.vmo.note.exceptions.BadRequestException;
 import com.vmo.note.exceptions.ResourceNotFoundException;
 import com.vmo.note.mapper.BasicNoteMapper;
 import com.vmo.note.model.BasicNote;
@@ -14,6 +14,7 @@ import com.vmo.note.model.dto.NoteDto;
 import com.vmo.note.repository.BasicNoteRepository;
 import com.vmo.note.service.BasicNoteService;
 import com.vmo.note.service.UserService;
+import org.apache.commons.collections4.MapUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,7 +102,7 @@ public class BasicNoteServiceImpl implements BasicNoteService {
     }
 
     @Override
-    public Page<BasicNote> findAll(Integer pageIndex, Integer pageSize) {
+    public Page<BasicNote> findAll(Integer pageIndex, Integer pageSize, NoteFilterRequest noteFilterRequest) {
         Integer _pageIndex = PagingConstant.DEFAULT_PAGE_INDEX;
         Integer _pageSize = PagingConstant.DEFAULT_PAGE_SIZE;
 
@@ -112,7 +113,28 @@ public class BasicNoteServiceImpl implements BasicNoteService {
         if (!Objects.nonNull(pageSize)) {
             _pageSize = pageSize;
         }
-        Pageable pageable = PageRequest.of(_pageIndex, _pageSize, Sort.by(new ArrayList<>()));
+
+        List<Sort.Order> orders = new ArrayList<>();
+
+        if (Objects.nonNull(noteFilterRequest)) {
+            if (MapUtils.isNotEmpty(noteFilterRequest.getSortBy())) {
+                noteFilterRequest.getSortBy().forEach((k, v) -> {
+                    switch (v) {
+                        case "asc":
+                            Sort.Order ascOrder = Sort.Order.asc(k);
+                            orders.add(ascOrder);
+                            break;
+                        case "desc":
+                            Sort.Order descOrder = Sort.Order.desc(k);
+                            orders.add(descOrder);
+                            break;
+                        default:
+                            break;
+                    }
+                });
+            }
+        }
+        Pageable pageable = PageRequest.of(_pageIndex, _pageSize, Sort.by(orders));
 
         Page<BasicNote> results = Page.empty();
         try {
@@ -122,24 +144,6 @@ public class BasicNoteServiceImpl implements BasicNoteService {
             return results;
         }
         return results;
-    }
-
-    @Override
-    public void checkingOwner(Long noteId) {
-        User user = userService.getLoggedInUser();
-        if (!basicNoteRepository.existsByUserAndId(user, noteId)) {
-            throw new BadRequestException(String
-                    .format(messageTranslator
-                                    .toLocale(MessageCode.USER_IS_NOT_AN_OWNER_OF_NOTE)
-                            , noteId));
-        }
-    }
-
-    @Override
-    public int countUncompletedNote() {
-        List<BasicNote> uncompletedNoteOfLoggedInUser = basicNoteRepository
-                .findAllByUserAndCompleted(userService.getLoggedInUser(), false);
-        return Objects.isNull(uncompletedNoteOfLoggedInUser) ? 0 : uncompletedNoteOfLoggedInUser.size();
     }
 
     @Override
